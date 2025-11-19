@@ -12,6 +12,7 @@ import type {
 import { stringify } from "qs";
 import { getToken, formatToken } from "@/utils/auth";
 import { useUserStoreHook } from "@/store/modules/user";
+import { ElMessage } from "element-plus";
 
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
@@ -125,13 +126,45 @@ class PureHttp {
         }
         if (PureHttp.initConfig.beforeResponseCallback) {
           PureHttp.initConfig.beforeResponseCallback(response);
-          return response.data;
+          // return response.data;
         }
-        return response.data;
+        // 统一解包 ResponseResult<T>：{ success, code, message, data }
+        const body = response.data as any;
+        if (
+          body &&
+          typeof body === "object" &&
+          "success" in body &&
+          "code" in body &&
+          "message" in body
+        ) {
+          if (body.success) {
+            return body.data;
+          }
+          const msg =
+            typeof body.message === "string" && body.message.trim()
+              ? body.message
+              : "请求失败";
+          ElMessage.error(msg);
+          const bizError = new Error(msg) as any;
+          bizError.bizCode = body.code;
+          return Promise.reject(bizError);
+        }
+
+        // 非约定结构，原样返回
+        return body;
+        // return response.data;
       },
       (error: PureHttpError) => {
         const $error = error;
         $error.isCancelRequest = Axios.isCancel($error);
+        // 取消请求不提示；其余 HTTP/网络错误统一提示
+        if (!$error.isCancelRequest) {
+          const msg =
+            ($error.response?.data as any)?.message ||
+            $error.message ||
+            "请求失败";
+          ElMessage.error(String(msg));
+        }
         // 所有的响应异常 区分来源为取消请求/非取消请求
         return Promise.reject($error);
       }

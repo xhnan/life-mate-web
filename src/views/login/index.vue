@@ -14,11 +14,12 @@ import { initRouter, getTopMenu } from "@/router/utils";
 import { bg, avatar, illustration } from "./utils/static";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
-
+import { ElMessage } from "element-plus";
 import dayIcon from "@/assets/svg/day.svg?component";
 import darkIcon from "@/assets/svg/dark.svg?component";
 import Lock from "~icons/ri/lock-fill";
 import User from "~icons/ri/user-3-fill";
+import { initSystemApi } from "@/api/user";
 
 defineOptions({
   name: "Login"
@@ -40,7 +41,16 @@ const ruleForm = reactive({
   username: "admin",
   password: "admin123"
 });
-
+const onRegister = () => {
+  ElMessage.error("注册功能暂未开放");
+};
+const onInit = () => {
+  initSystemApi().then(res => {
+    ElMessage.success(
+      "初始化成功，请使用默认账号登录，账号：admin，密码：admin123"
+    );
+  });
+};
 const onLogin = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate(valid => {
@@ -64,7 +74,7 @@ const onLogin = async (formEl: FormInstance | undefined) => {
                 .finally(() => (disabled.value = false));
             });
           } else {
-            message("登录失败", { type: "error" });
+            message("登录失败" + res.message, { type: "error" });
           }
         })
         .finally(() => (loading.value = false));
@@ -160,6 +170,31 @@ useEventListener(document, "keydown", ({ code }) => {
                 @click="onLogin(ruleFormRef)"
               >
                 登录
+              </el-button>
+
+            </Motion>
+            <Motion :delay="250">
+              <el-button
+                class="w-full mt-4!"
+                size="default"
+                type="primary"
+                :loading="loading"
+                :disabled="disabled"
+                @click="onRegister"
+              >
+                注册
+              </el-button>
+            </Motion>
+            <Motion :delay="250">
+              <el-button
+                class="w-full mt-4!"
+                size="default"
+                type="primary"
+                :loading="loading"
+                :disabled="disabled"
+                @click="onInit"
+              >
+                初始化
               </el-button>
             </Motion>
           </el-form>
