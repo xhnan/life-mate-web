@@ -45,11 +45,12 @@ const onRegister = () => {
   ElMessage.error("注册功能暂未开放");
 };
 const onInit = () => {
-  initSystemApi().then(res => {
-    ElMessage.success(
-      "初始化成功，请使用默认账号登录，账号：admin，密码：admin123"
-    );
-  });
+  ElMessage.error("注册功能暂未开放");
+  // initSystemApi().then(res => {
+  //   ElMessage.success(
+  //     "初始化成功，请使用默认账号登录，账号：admin，密码：admin123"
+  //   );
+  // });
 };
 const onLogin = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
@@ -62,20 +63,16 @@ const onLogin = async (formEl: FormInstance | undefined) => {
           password: ruleForm.password
         })
         .then(res => {
-          if (res.success) {
-            // 获取后端路由
-            return initRouter().then(() => {
-              disabled.value = true;
-              router
-                .push(getTopMenu(true).path)
-                .then(() => {
-                  message("登录成功", { type: "success" });
-                })
-                .finally(() => (disabled.value = false));
-            });
-          } else {
-            message("登录失败" + res.message, { type: "error" });
-          }
+          // 获取后端路由
+          return initRouter().then(() => {
+            disabled.value = true;
+            router
+              .push(getTopMenu(true).path)
+              .then(() => {
+                message("登录成功", { type: "success" });
+              })
+              .finally(() => (disabled.value = false));
+          });
         })
         .finally(() => (loading.value = false));
     }

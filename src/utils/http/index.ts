@@ -129,7 +129,7 @@ class PureHttp {
           // return response.data;
         }
         // 统一解包 ResponseResult<T>：{ success, code, message, data }
-        const body = response.data as any;
+        const body = response.data;
         if (
           body &&
           typeof body === "object" &&
