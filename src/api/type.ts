@@ -10,3 +10,10 @@ export type userType = {
   refreshToken?: string;
   expires?: Date;
 };
+
+
+export type MenuType = {
+  path: string;
+  meta: any;
+  children?: Array<any>;
+}
