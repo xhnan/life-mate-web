@@ -88,7 +88,13 @@ const expandCloseIcon = computed(() => {
 const onlyOneChild: menuType = ref(null);
 
 function hasOneShowingChild(children: menuType[] = [], parent: menuType) {
-  const showingChildren = children.filter((item: any) => {
+  // const showingChildren = children.filter((item: any) => {
+  //   onlyOneChild.value = item;
+  //   return true;
+  // });
+  const validChildren = Array.isArray(children) ? children : [];
+
+  const showingChildren = validChildren.filter((item: any) => {
     onlyOneChild.value = item;
     return true;
   });

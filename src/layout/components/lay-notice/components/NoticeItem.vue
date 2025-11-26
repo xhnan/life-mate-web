@@ -78,7 +78,6 @@ function hoverDescription(event, description) {
         <el-tag
           v-if="noticeItem?.extra"
           :type="noticeItem?.status"
-          size="small"
           class="notice-title-extra"
         >
           {{ noticeItem?.extra }}
