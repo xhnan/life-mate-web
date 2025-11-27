@@ -67,7 +67,10 @@ export const useUserStore = defineStore("pure-user", {
               setToken({
                 accessToken: data.token || "",
                 refreshToken: data.refreshToken || "",
-                expires: data.expires || new Date()
+                expires: data.expires || new Date(),
+                roles: data.roles,
+                permissions: data.permissions,
+                username: data.username
               });
             }
             resolve(data);
